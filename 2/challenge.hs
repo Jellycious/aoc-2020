@@ -1,4 +1,5 @@
 import System.IO
+-- Let's use REGEX for the next challenge, this is ugly.
 
 count c ([]) = 0 
 count c (x:xs) = if x==c then 1 + count c xs else count c xs 
