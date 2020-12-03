@@ -1,2 +1,3 @@
-# Advent-Of-Code Solution 2020
-## In Haskell
+# Advent-Of-Code Solutions 2020
+#### In Haskell
+## Contains SPOILERS
