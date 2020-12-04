@@ -1,6 +1,6 @@
 import Data.List.Split
 import Text.Regex.TDFA
---First-part Solution
+--second-part Solution
 splitPassports :: [String] -> [String]
 splitPassports input = splitPassports' [] input
     where splitPassports' acc [] = [acc] 
@@ -22,7 +22,7 @@ getKeys kvs = map getKey kvs
 getKey :: String -> String
 getKey kv = init $ kv =~ "[a-zA-Z]+:" :: String
 getValue :: String -> String
-getValue kv = tail $ kv =~ ":[a-zA-Z0-9#]" :: String
+getValue kv = tail $ kv =~ ":[a-zA-Z0-9#]+" :: String
 
 requiredKeys = ["byr","iyr","eyr","hgt","hcl","ecl","pid"]
 
@@ -40,14 +40,27 @@ checkKey "hgt" val
     |   (val =~ "^[0-9]+in$" :: Bool)     = x >= 59 && x <= 76
     |   otherwise                       = False 
         where x = read (val =~ "[0-9]+" :: String) :: Int
-
+checkKey "hcl" val = (val =~ "^#[0-9a-f]{6}$" :: Bool)
+checkKey "ecl" val = val `elem` ["amb","blu","brn","gry","grn","hzl","oth"]
+checkKey "pid" val = (val =~ "^[0-9]{9}$") :: Bool
+checkKey "cid" val = True
 
 fourdigits :: String -> Bool
 fourdigits v = (v =~ "^[0-9]{4}$" :: Bool)
+
+checkPassport passport 
+    |   validKeys passport      = foldl (&&) True cs
+    |   otherwise               = False
+        where   kvs = keysValues passport 
+                cs = map (\p -> checkKey (getKey p) (getValue p)) kvs
+
+test1 = checkPassport (testPassports!!0)
+test2 = checkPassport (testPassports!!1)
+                
 
 
 
 main = do
     passports <- splitPassports <$> lines <$> readFile "input.txt"
-    kvs <- pure $ (keysValues <$> passports)
+    correct <- length $ filter (==True) (checkPassport <$> passport)
     return kvs
