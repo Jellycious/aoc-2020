@@ -24,10 +24,9 @@ findrow sc = fc sc rowOptions
 computeUid seat = uid s
     where s = ((findrow $ seatRow seat), (findcol $ seatCol seat))
 
-fullList = [54..878]
+fullList = [54..878] -- hard-coded
 
-findMissingSeats [] expected = expected
-findMissingSeats (x:xs) expected = findMissingSeats xs (delete x expected)
+findMissingSeats seats expected = expected \\ seats
 
 main = do
     seats <- lines <$> readFile "input.txt"
