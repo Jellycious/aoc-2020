@@ -74,6 +74,6 @@ solve p = runProgram (flipInstrAt p sol)
 main = do
     program <- (parse programParser "") <$> readFile "input.txt"
     case program of 
-        (Right a)   -> return (solve $ fromRight [] program)
+        (Right a)   -> putStrLn (show $ solve $ fromRight [] program)
         _           -> throw (ParseException)  
 
