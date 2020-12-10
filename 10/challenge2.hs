@@ -11,7 +11,7 @@ solver :: M.Map Int Int -> [Int] -> [Int] -> M.Map Int Int
 solver m [] ls = m
 solver m (x:xs) ls = solver m' xs (x:ls)
     where cands = possible ls x 
-          arr   = sum $ map (\x -> fromJust $ M.lookup x m) cands
+          arr   = sum $ map (fromJust . flip M.lookup m) cands
           m'    = M.insert x arr m
 
 solve :: [Int] -> Int -> M.Map Int Int
