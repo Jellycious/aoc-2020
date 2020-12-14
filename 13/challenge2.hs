@@ -18,17 +18,11 @@ getRequirements' (x:xs) rs a
 --      The bus id's are all coprime.
 --      The first equation can be written as uid*i + 0 (forall i >= 0) 
 
-data F = F Int Int
-    deriving (Show)
+sequencer (x,y) = [x*i+y | i <- [0..]]
 
--- Works because id1 and id2 are coprime
-mylcm id1 id2 = id1 * id2
+addReq (x,y) (u,t) = (x*u, newOffset (x,y) (u,t))
 
-sequencer (F x y) = [x * i + y | i <- [0..]]
-
-addReq (F x y) (u, t) = F (mylcm x u) (firstIntersect (F x y) (u,t))
-
-firstIntersect f (u, t) = head $ filter req (sequencer f) 
+newOffset f (u,t) = head $ filter req (sequencer f) 
     where req e = (e+t) `mod` u == 0
 
 main = do
@@ -38,8 +32,5 @@ main = do
 solve content = do 
     timestamp <- return $ read (content!!0) :: IO Int
     requirements <- return $ getRequirements $ parseSchedule (content!!1)
-    (uid, ttw) <- return $ head requirements
-    initReq <- return $ F uid ttw   -- This only works because the first ttw is 0
-    seq <- return $ foldl addReq initReq (tail requirements)
+    seq <- return $ foldl addReq (head requirements) (tail requirements)
     return $ head $ sequencer seq 
-    
